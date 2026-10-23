@@ -1,0 +1,6 @@
+@ICT.PaymentGateway.API_HostAddress = http://localhost:5151
+
+GET {{ICT.PaymentGateway.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

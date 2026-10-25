@@ -44,3 +44,18 @@ dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_style.underscore_camel.required_prefix = _
 dotnet_naming_style.underscore_camel.capitalization = camel_case
+
+[tests/**.cs]
+# Test names follow Method_Condition_Result (docs/CONVENTIONS.md)
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1001.severity = none
+
+[*.cs]
+# Rules that conflict with the project conventions (Result<T>.Success factories, Error type, simple logging)
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1000.severity = none
+
+[**/Migrations/*.cs]
+generated_code = true

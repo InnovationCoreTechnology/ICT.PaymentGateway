@@ -47,6 +47,7 @@ desktop.ini
 ## Secrets and certificates (never commit)
 .env
 .env.*
+!.env.example
 *.pfx
 *.pem
 *.key

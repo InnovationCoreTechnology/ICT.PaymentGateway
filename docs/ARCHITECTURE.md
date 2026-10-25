@@ -20,7 +20,7 @@ API  ->  Infrastructure -> Application, Domain
 ## 3. Request flow (create payment)
 1. Controller receives request and the `Idempotency-Key` header.
 2. Controller sends a `CreatePaymentCommand` through the mediator.
-3. Pipeline behaviours run in this order: **Logging -> Validation -> Idempotency -> Transaction**.
+3. Pipeline behaviours run in this order: **Logging -> Validation** (idempotency is handled inside `CreatePaymentCommandHandler` for now). The mediator is an in-house dispatcher (`Application/Common/Messaging`).
 4. Handler builds the `Payment` aggregate, calls `IPspGateway` (via a PSP factory), saves, and returns a result.
 5. Result is mapped to a response DTO. Errors map to RFC 7807 Problem Details.
 
@@ -29,6 +29,7 @@ API  ->  Infrastructure -> Application, Domain
 - Redis lock (RedLock) stops two requests with the same key from running at once.
 - The stored record holds: key, request hash, response, status, expiry.
 - Same key + same hash -> return stored response. Same key + different hash -> `422`.
+- **Current implementation (until roadmap 3.1):** stored in PostgreSQL (`idempotency_records`, unique on merchant + key) and the original payment is re-read on replay. Two truly simultaneous requests are stopped by the unique index (second gets `409`), but both may reach the PSP. The Redis lock fixes that.
 
 ## 5. Payment lifecycle (starting design — confirm before building)
 `Created -> Pending -> Authorized -> Captured -> (Refunded | PartiallyRefunded)`

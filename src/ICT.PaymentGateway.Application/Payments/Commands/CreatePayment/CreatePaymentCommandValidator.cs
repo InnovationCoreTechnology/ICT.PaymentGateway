@@ -13,32 +13,8 @@ public sealed class CreatePaymentCommandValidator : AbstractValidator<CreatePaym
         RuleFor(x => x.PaymentMethodToken)
             .NotEmpty()
             .MaximumLength(200)
-            .Must(token => !LooksLikeCardNumber(token))
+            .Must(token => !CardNumberGuard.LooksLikeCardNumber(token))
             .WithMessage("'Payment Method Token' must be a token, not a card number.");
         RuleFor(x => x.Description).MaximumLength(500);
-    }
-
-    // PCI guard: a token made only of 13-19 digits (spaces and dashes allowed) is probably a card number.
-    private static bool LooksLikeCardNumber(string? value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return false;
-        }
-
-        var digits = 0;
-        foreach (var c in value)
-        {
-            if (char.IsAsciiDigit(c))
-            {
-                digits++;
-            }
-            else if (c is not (' ' or '-'))
-            {
-                return false;
-            }
-        }
-
-        return digits is >= 13 and <= 19;
     }
 }

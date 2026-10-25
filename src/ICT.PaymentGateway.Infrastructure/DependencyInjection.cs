@@ -1,7 +1,9 @@
 using ICT.PaymentGateway.Application.Common;
 using ICT.PaymentGateway.Application.Payments;
+using ICT.PaymentGateway.Application.Subscriptions;
 using ICT.PaymentGateway.Infrastructure.Persistence;
 using ICT.PaymentGateway.Infrastructure.Psp;
+using ICT.PaymentGateway.Infrastructure.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,13 @@ public static class DependencyInjection
         services.AddScoped<IIdempotencyStore, IdempotencyStore>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddSingleton<IPspGateway, FakePspGateway>();
+
+        services.AddOptions<SubscriptionPlansOptions>()
+            .Bind(configuration.GetSection(SubscriptionPlansOptions.SectionName))
+            .Validate(options => SubscriptionPlanCatalog.Validate(options) is null, "Subscriptions:Plans is not configured correctly.")
+            .ValidateOnStart();
+        services.AddSingleton<ISubscriptionPlanCatalog, SubscriptionPlanCatalog>();
+        services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 
         return services;
     }

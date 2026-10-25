@@ -20,3 +20,25 @@ X-Merchant-Id: {{merchant}}
 
 ### Readiness
 GET {{host}}/health/ready
+
+### List plans
+GET {{host}}/api/v1/subscription-plans
+
+### Buy a plan (Basic, Classic or Gold). Use a token starting with tok_decline to see a 402.
+POST {{host}}/api/v1/subscriptions
+Content-Type: application/json
+Idempotency-Key: sub-demo-001
+X-Merchant-Id: {{merchant}}
+
+{
+  "plan": "Gold",
+  "paymentMethodToken": "tok_visa_demo"
+}
+
+### Current subscription (404 while locked)
+GET {{host}}/api/v1/subscriptions/current
+X-Merchant-Id: {{merchant}}
+
+### Gated example endpoints (403 until the plan is bought)
+GET {{host}}/api/v1/membership/gold
+X-Merchant-Id: {{merchant}}

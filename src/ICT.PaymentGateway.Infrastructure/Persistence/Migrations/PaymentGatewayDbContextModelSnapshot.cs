@@ -97,6 +97,38 @@ namespace ICT.PaymentGateway.Infrastructure.Persistence.Migrations
                     b.ToTable("payments", (string)null);
                 });
 
+            modelBuilder.Entity("ICT.PaymentGateway.Domain.Subscriptions.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MerchantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Plan")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateTimeOffset>("StartsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
+
+                    b.HasIndex("MerchantId", "ExpiresAt");
+
+                    b.ToTable("subscriptions", (string)null);
+                });
+
             modelBuilder.Entity("ICT.PaymentGateway.Domain.Payments.Payment", b =>
                 {
                     b.OwnsOne("ICT.PaymentGateway.Domain.Payments.Money", "Amount", b1 =>

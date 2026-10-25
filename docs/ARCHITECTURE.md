@@ -62,3 +62,10 @@ Illegal transitions throw a domain exception. The state machine lives inside the
 | IntegrationTests | Real API + real DB + real Redis | `WebApplicationFactory`, Testcontainers |
 
 Target: Domain and Application at least 80% line coverage. Every bug fix gets a regression test.
+
+## Subscriptions (membership plans)
+- Three tiers, `Basic < Classic < Gold`. Price, currency, duration and a feature map per plan live in `appsettings.json` under `Subscriptions:Plans` and are validated at start-up.
+- `POST /api/v1/subscriptions` creates a payment for the plan price, authorizes and captures it, and only then writes a `Subscription` (payment, subscription and idempotency record are saved together). A decline returns `402` and unlocks nothing. Replays use the same `Idempotency-Key` rules as payments.
+- Access is derived from dates (`StartsAt <= now < ExpiresAt`), so no background job is needed. Renewing the same plan keeps the time left; changing plan starts a fresh term from now (no proration).
+- `[RequiresPlan(SubscriptionPlan.X)]` on an endpoint returns `403` Problem Details unless the merchant has an active plan of tier X or higher. `MembershipFeaturesController` shows one example per tier.
+- The account is the merchant ID (`X-Merchant-Id`) until merchant authentication exists (roadmap 4.1).

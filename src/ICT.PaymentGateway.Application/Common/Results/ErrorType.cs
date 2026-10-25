@@ -7,4 +7,5 @@ public enum ErrorType
     NotFound = 2,
     Conflict = 3,
     Unprocessable = 4,
+    PaymentRequired = 5,
 }

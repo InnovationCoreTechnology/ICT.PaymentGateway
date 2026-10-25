@@ -43,6 +43,7 @@ These are open. Agents must ask, not guess.
 - [ ] 3.3 Real PSP adapter #1 (after decision 3), with timeouts, retries, circuit breaker.
 - [ ] 3.4 Capture, cancel/void.
 - [ ] 3.5 Refunds (full and partial).
+- [x] 3.6 Subscriptions: Basic / Classic / Gold plans, pay to unlock (30-day term), `[RequiresPlan]` gating. Integration tests still need a run with Docker; prices in `appsettings.json` are placeholders.
 
 ## Phase 4 — Security and operations
 - [ ] 4.1 Merchant authentication (after decision 4).
